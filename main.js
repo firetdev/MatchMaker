@@ -1,3 +1,4 @@
+//Color object
 function Clr (r, g, b) {
     this.r = r;
     this.g = g;
@@ -5,6 +6,7 @@ function Clr (r, g, b) {
     this.similar = 0;
 }
 
+//Get list of pixel colors in the image
 function listOfColors (img) {
     var list = [];
     img.willReadFrequently = true;
@@ -14,6 +16,27 @@ function listOfColors (img) {
         }
     }
     return list;
+}
+
+//Are two colors similar?
+function isSimilar (c1, c2) {
+    var difference = {
+        r: 0,
+        g: 0,
+        b: 0
+    };
+    difference.r = c1.r - c2.r;
+    difference.g = c1.g - c2.g;
+    difference.b = c1.b - c2.b;
+    if (difference.r < 0)
+        difference.r *= -1;
+    if (difference.g < 0)
+        difference.g *= -1;
+    if (difference.b < 0)
+        difference.b *= -1;
+    if (difference.r < 25 && difference.g < 25 && difference.b < 25) {
+        return true;
+    }
 }
 
 //Create canvas 1
@@ -77,12 +100,18 @@ function next () {
         }
     }
     //Cut down to X colors
-    console.log(number);
     var finals = [];
     for (var i = 0; i < image1list.length; i++) {
         finals.push(image1list[i]);
     }
     finals.sort((a, b) => b.similar - a.similar);
+    for (var i = 0; i < number; i++) {
+        for (var e = 1; e < number; e++) {
+            if (isSimilar(finals[i], finals[e])) {
+                finals.splice(e, 1);
+            }
+        }
+    }
     for (var i = number; i < finals.length; i++) {
         finals.splice(i, 1);
         i--;
