@@ -19,7 +19,7 @@ function listOfColors (img) {
 //Create canvas 1
 var canvas1 = document.getElementById("canvas1");
 var ctx1 = canvas1.getContext("2d");
-canvas1.width = 640;
+canvas1.width = 480;
 
 //Select image 1
 var image1 = document.getElementById("image1");
@@ -87,6 +87,14 @@ function next () {
         finals.splice(i, 1);
         i--;
     }
-    console.log(image1list);
+    //Draw pallete
+    var palette = document.getElementById("palette");
+    var paletteCtx = palette.getContext("2d");
+    palette.height = 32;
+    palette.width = finals.length * 32;
     console.log(finals);
+    for (var i = 0; i < finals.length; i++) {
+        paletteCtx.fillStyle = `rgb(${finals[i].r}, ${finals[i].g}, ${finals[i].b})`;
+        paletteCtx.fillRect(i * 32, 0, 32, 32);
+    }
 }
