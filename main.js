@@ -1,5 +1,11 @@
 //The script for MatchMaker, which creates palettes from images and recolors images to match palettes
 
+var colorlist = []  //Palette
+
+//
+//FUNCTIONS
+//
+
 //Color object
 function Clr (r, g, b) {
     this.r = r;
@@ -46,6 +52,40 @@ function isSimilar (c1, c2) {
     }
 }
 
+//Which color is most similar?
+function mostSimilar (color) {
+    var prevDifference = 10000000;
+    var prev;
+    for (var i = 0; i < colorlist.length; i++) {
+        var difference = {
+            r: 0,
+            g: 0,
+            b: 0
+        };
+        difference.r = color.r - colorlist[i].r;
+        difference.g = color.g - colorlist[i].g;
+        difference.b = color.b - colorlist[i].b;
+        if (difference.r < 0)
+            difference.r *= -1;
+        if (difference.g < 0)
+            difference.g *= -1;
+        if (difference.b < 0)
+            difference.b *= -1;
+        if (difference.r >= 45 || difference.g >= 45 || difference.b >= 45) 
+            total += 50;
+        var total = difference.r + difference.g + difference.b;
+        if (total < prevDifference) {
+            prevDifference = total;
+            prev = colorlist[i];
+        }
+    }
+    return prev;
+}
+
+//
+//PART 1 (palette making)
+//
+
 //Create canvas 1
 var canvas1 = document.getElementById("canvas1");
 var ctx1 = canvas1.getContext("2d");
@@ -61,11 +101,11 @@ image1.addEventListener ("change", e => {
         image1display.src = event.target.result;
     };
     reader.readAsDataURL(file);
-    window.setTimeout("next()", 10);
+    window.setTimeout("getPalette()", 10);
 });
 
 //Activates when image is selected
-function next () {
+function getPalette () {
     var number = document.getElementById("number").value;
     canvas1.height = (image1display.height / image1display.width) * canvas1.width;
     ctx1.drawImage(image1display, 0, 0, canvas1.width, canvas1.height);
@@ -133,4 +173,32 @@ function next () {
         paletteCtx.fillStyle = `rgb(${finals[i].r}, ${finals[i].g}, ${finals[i].b})`;
         paletteCtx.fillRect(i * 32, 0, 32, 32);
     }
+    colorlist = finals;
+}
+
+//
+//PART 2 (recoloring)
+//
+
+//Create canvas 2
+var canvas2 = document.getElementById("canvas2");
+var ctx2 = canvas2.getContext("2d");
+canvas2.width = 480;
+//Select image2
+var image2 = document.getElementById("image2");
+var image2display = document.getElementById("image2display");
+image2.addEventListener("change", (e) => {
+    var file = e.target.files[0];
+    var reader = new FileReader();
+    reader.onload = (event) => {
+        image2display.src = event.target.result;
+    };
+    reader.readAsDataURL(file);
+});
+
+//Recolor image
+var button = document.getElementById("button");
+button.addEventListener("click", recolor());
+function recolor () {
+    
 }
