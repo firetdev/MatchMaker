@@ -1,3 +1,5 @@
+//The script for MatchMaker, which creates palettes from images and recolors images to match palettes
+
 //Color object
 function Clr (r, g, b) {
     this.r = r;
@@ -35,6 +37,10 @@ function isSimilar (c1, c2) {
     if (difference.b < 0)
         difference.b *= -1;
     var total = difference.r + difference.g + difference.b;
+    if (total == 0)
+        return false;
+    if (difference.r >= 45 || difference.g >= 45 || difference.b >= 45) 
+        return false;
     if (total <= 100) {
         return true;
     }
@@ -106,11 +112,11 @@ function next () {
         finals.push(image1list[i]);
     }
     finals.sort((a, b) => b.similar - a.similar);
-    console.log(finals);
     for (var i = 0; i < finals.length; i++) {
-        for (var e = 1; e < finals.length; e++) {
+        for (var e = 0; e < finals.length; e++) {
             if (isSimilar(finals[i], finals[e])) {
                 finals.splice(e, 1);
+                e--;
             }
         }
     }
@@ -123,7 +129,6 @@ function next () {
     var paletteCtx = palette.getContext("2d");
     palette.height = 32;
     palette.width = finals.length * 32;
-    console.log(finals);
     for (var i = 0; i < finals.length; i++) {
         paletteCtx.fillStyle = `rgb(${finals[i].r}, ${finals[i].g}, ${finals[i].b})`;
         paletteCtx.fillRect(i * 32, 0, 32, 32);
