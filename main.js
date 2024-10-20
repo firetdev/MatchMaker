@@ -34,7 +34,8 @@ function isSimilar (c1, c2) {
         difference.g *= -1;
     if (difference.b < 0)
         difference.b *= -1;
-    if (difference.r < 25 && difference.g < 25 && difference.b < 25) {
+    var total = difference.r + difference.g + difference.b;
+    if (total <= 100) {
         return true;
     }
 }
@@ -105,8 +106,9 @@ function next () {
         finals.push(image1list[i]);
     }
     finals.sort((a, b) => b.similar - a.similar);
-    for (var i = 0; i < number; i++) {
-        for (var e = 1; e < number; e++) {
+    console.log(finals);
+    for (var i = 0; i < finals.length; i++) {
+        for (var e = 1; e < finals.length; e++) {
             if (isSimilar(finals[i], finals[e])) {
                 finals.splice(e, 1);
             }
