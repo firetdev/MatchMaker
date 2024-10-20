@@ -36,7 +36,7 @@ image1.addEventListener ("change", e => {
 
 //Activates when image is selected
 function next () {
-    var number = parseInt(document.getElementById("number"));
+    var number = document.getElementById("number").value;
     canvas1.height = (image1display.height / image1display.width) * canvas1.width;
     ctx1.drawImage(image1display, 0, 0, canvas1.width, canvas1.height);
     var image1list2 = listOfColors(image1display);
@@ -76,5 +76,17 @@ function next () {
             }
         }
     }
+    //Cut down to X colors
+    console.log(number);
+    var finals = [];
+    for (var i = 0; i < image1list.length; i++) {
+        finals.push(image1list[i]);
+    }
+    finals.sort((a, b) => b.similar - a.similar);
+    for (var i = number; i < finals.length; i++) {
+        finals.splice(i, 1);
+        i--;
+    }
     console.log(image1list);
+    console.log(finals);
 }
