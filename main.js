@@ -100,6 +100,7 @@ image1.addEventListener ("change", e => {
         image1display.src = event.target.result;
     };
     reader.readAsDataURL(file);
+    document.getElementById("file1").textContent = e.target.files[0].name;
     window.setTimeout("getPalette()", 10);
 });
 
@@ -166,12 +167,22 @@ function getPalette () {
     //Draw pallete
     var palette = document.getElementById("palette");
     var paletteCtx = palette.getContext("2d");
-    palette.height = 32;
-    palette.width = finals.length * 32;
+    palette.height = (finals.length * 32) / 4;
+    palette.width = 128;
+    var pos = {
+        x: 1,
+        y: 1
+    };
     for (var i = 0; i < finals.length; i++) {
         paletteCtx.fillStyle = `rgb(${finals[i].r}, ${finals[i].g}, ${finals[i].b})`;
-        paletteCtx.fillRect(i * 32, 0, 32, 32);
+        paletteCtx.fillRect(pos.x, pos.y, 32, 32);
+        pos.x += 32;
+        if (pos.x > 100) {
+            pos.x = 1;
+            pos.y += 32;
+        }
     }
+    //document.getElementById("pdownload").href = canvas1.toDataURL();
     colorlist = finals;
 }
 
@@ -195,6 +206,7 @@ image2.addEventListener("change", (e) => {
         image2display.src = event.target.result;
     };
     reader.readAsDataURL(file);
+    document.getElementById("file2").textContent = e.target.files[0].name;
     window.setTimeout("initRender()", 10);
 });
 
@@ -203,6 +215,7 @@ function initRender () {
     canvas2.height = (image2display.height / image2display.width) * canvas2.width;
     ctx2.drawImage(image2display, 0, 0, canvas2.width, canvas2.height);
     canvasDisplay.src = canvas2.toDataURL();
+    document.getElementById("rdownload").href = canvas2.toDataURL();
 }
 
 //Recolor image

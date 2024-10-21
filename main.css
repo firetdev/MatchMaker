@@ -1,3 +1,51 @@
+body {
+    background-color: rgb(51, 178, 178);
+    color: rgb(255, 255, 255);
+    font-family: Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    text-align: center;
+}
+canvas {
+    outline: 5px solid white;
+}
+.file {
+    display: none;
+}
+.button {
+    margin-top: 10px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    padding-left: 7px;
+    padding-right: 7px;
+    outline: 3px solid white;
+    display: inline-block;
+    border-radius: 10%;
+    transition: background-color 0.5s;
+}
 .imagedisplay {
     display: none;
+}
+.filename {
+    margin-top: 10px;
+}
+#part1 {
+    float: left;
+    padding-left: 10%;
+}
+#part2 {
+    float: right;
+    padding-right: 10%;
+    align-items: center;
+}
+#image1 {
+    margin-top: 10px;
+}
+#margin {
+    margin-top: 6px;
+}
+#title {
+    margin-top: 30px;
+}
+.button:hover {
+    background-color: rgb(101, 218, 218);
 }

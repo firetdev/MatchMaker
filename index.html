@@ -5,19 +5,29 @@
         <link rel="stylesheet" href="main.css">
     </head>
     <body>
+        <h1 id="title">MatchMaker</h1>
+        <h3><i>Make palettes from images, and images from palettes</i></h3><br><br>
         <div id="part1">
-            <input type="textline" id="number">
-            <input type="file" id="image1" accept="image/*">
             <img id="image1display" class="imagedisplay">
-            <canvas id="canvas1"></canvas>
-            <canvas id="palette"></canvas>
+            <canvas id="canvas1" width="480" height="380"></canvas>
+            <br><br><div id="margin"></div>
+            Number of colors: <input type="textline" id="number"><br>
+            <input type="file" id="image1" class="file" accept="image/*">
+            <label for="image1" class="button">Choose file</label>
+            <div id="file1" class="filename"></div>
         </div>
+        <div id="divider"></div>
+        <canvas id="palette" width="128" height="380"></canvas>
         <div id="part2">
-            <input type="file" id="image2" accept="image/*">
-            <img id="image2display" class="imagedisplay"></img>
-            <div id="button" onclick="recolor()">Recolor</div>
+            <canvas id="canvas2" width="480" height="380"></canvas><br>
+            <br>
+            <div id="button" class="button" onclick="recolor()">Recolor</div><br>
+            <input type="file" id="image2" class="file" accept="image/*">
+            <label for="image2" class="button">Choose file</label><br>
+            <a href="" id="rdownload" class="button" download>Download</a>
+            <div id="file2" class="filename"></div>
+            <img id="image2display" class="imagedisplay"></img><br>
             <img id="canvasdata" class="imagedisplay">
-            <canvas id="canvas2"></canvas>
         </div>
         <script src="main.js"></script>
     </body>
