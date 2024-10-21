@@ -15,12 +15,11 @@ function Clr (r, g, b) {
 }
 
 //Get list of pixel colors in the image
-function listOfColors (img) {
+function listOfColors (img, con) {
     var list = [];
-    img.willReadFrequently = true;
     for (var i = 0; i < img.height; i++) {
         for (var e = 0; e < img.width; e++) {
-            list.push(new Clr(ctx1.getImageData(e, i, 1, 1).data[0], ctx1.getImageData(e, i, 1, 1).data[1], ctx1.getImageData(e, i, 1, 1).data[2]));
+            list.push(new Clr(con.getImageData(e, i, 1, 1).data[0], con.getImageData(e, i, 1, 1).data[1], con.getImageData(e, i, 1, 1).data[2]));
         }
     }
     return list;
@@ -109,7 +108,7 @@ function getPalette () {
     var number = document.getElementById("number").value;
     canvas1.height = (image1display.height / image1display.width) * canvas1.width;
     ctx1.drawImage(image1display, 0, 0, canvas1.width, canvas1.height);
-    var image1list2 = listOfColors(image1display);
+    var image1list2 = listOfColors(image1display, ctx1);
     var image1list = [];
     //Speed up processing by only including 1 in 25 pixels
     for (var i = 0; i < image1list2.length; i++) {
@@ -183,7 +182,9 @@ function getPalette () {
 //Create canvas 2
 var canvas2 = document.getElementById("canvas2");
 var ctx2 = canvas2.getContext("2d");
+var canvasDisplay = document.getElementById("canvasdata");
 canvas2.width = 480;
+
 //Select image2
 var image2 = document.getElementById("image2");
 var image2display = document.getElementById("image2display");
@@ -194,11 +195,33 @@ image2.addEventListener("change", (e) => {
         image2display.src = event.target.result;
     };
     reader.readAsDataURL(file);
+    window.setTimeout("initRender()", 10);
 });
 
+//Initial render
+function initRender () {
+    canvas2.height = (image2display.height / image2display.width) * canvas2.width;
+    ctx2.drawImage(image2display, 0, 0, canvas2.width, canvas2.height);
+    canvasDisplay.src = canvas2.toDataURL();
+}
+
 //Recolor image
-var button = document.getElementById("button");
-button.addEventListener("click", recolor());
 function recolor () {
-    
+    var list = listOfColors(canvasDisplay, ctx2);
+    var position = {
+        x: 0,
+        y: 1
+    };
+    for (var i = 0; i < list.length; i++) {
+        position.x++;
+        if (position.x > 480) {
+            position.x = 1;
+            position.y++;
+        }
+        list[i].r = mostSimilar(list[i]).r;
+        list[i].g = mostSimilar(list[i]).g;
+        list[i].b = mostSimilar(list[i]).b;
+        ctx2.fillStyle = `rgb(${list[i].r}, ${list[i].g}, ${list[i].b})`;
+        ctx2.fillRect(position.x, position.y, 1, 1);
+    }
 }

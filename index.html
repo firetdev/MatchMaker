@@ -8,14 +8,15 @@
         <div id="part1">
             <input type="textline" id="number">
             <input type="file" id="image1" accept="image/*">
-            <img id="image1display" class="imagedisplay"></img>
+            <img id="image1display" class="imagedisplay">
             <canvas id="canvas1"></canvas>
             <canvas id="palette"></canvas>
         </div>
         <div id="part2">
             <input type="file" id="image2" accept="image/*">
             <img id="image2display" class="imagedisplay"></img>
-            <div id="button">Recolor</div>
+            <div id="button" onclick="recolor()">Recolor</div>
+            <img id="canvasdata" class="imagedisplay">
             <canvas id="canvas2"></canvas>
         </div>
         <script src="main.js"></script>
