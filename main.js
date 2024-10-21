@@ -1,10 +1,62 @@
 //The script for MatchMaker, which creates palettes from images and recolors images to match palettes
 
 var colorlist = []  //Palette
+var engine = 0;  //System to use to get palette
 
 //
 //FUNCTIONS
 //
+
+//Alternate way to make palette (INCOMPLETE; DO NOT USE)
+function getColors (clrs, num, con) {
+    var centers = [];
+    for (var i = 0; i < num; i++) {
+        var a = Math.floor(Math.random() * (canvas1.width + 1));
+        var b = Math.floor(Math.random() * (canvas1.height + 1));
+        var newColor = new Clr(con.getImageData(a, b, 1, 1).data[0], con.getImageData(a, b, 1, 1).data[1], con.getImageData(a, b, 1, 1).data[2]);
+        for (var e = 0; e < centers.length; e++) {
+            if (isSimilar(centers[e], newColor)) {
+                a = Math.floor(Math.random() * (canvas1.width + 1));
+                b = Math.floor(Math.random() * (canvas1.height + 1));
+                newColor = new Clr(con.getImageData(a, b, 1, 1).data[0], con.getImageData(a, b, 1, 1).data[1], con.getImageData(a, b, 1, 1).data[2]);
+            }
+        }
+        centers.push(newColor);
+    }
+    for (var u = 0; u < 3; u++) {
+        for (var i = 0; i < clrs.length; i++) {
+            var prevDist = 10000000;
+            var point = 0;
+            for (var e = 0; e < centers.length; e++) {
+                var dist = Math.sqrt(((clrs[i].r - centers[e].r)^2) + ((clrs[i].g - centers[e].g)^2) + ((clrs[i].b - centers[e].b)^2));
+                if (dist < prevDist) {
+                    prevDist = dist;
+                    point = e;
+                }
+            }
+            centers[point].assignedClrs.push(clrs[i]);
+        }
+        for (var i = 0; i < centers.length; i++) {
+            var totals = {
+                r: 0,
+                g: 0,
+                b: 0
+            }
+            for (var e = 0; e < centers[i].assignedClrs.length; e++) {
+                totals.r += centers[i].assignedClrs[e].r;
+                totals.g += centers[i].assignedClrs[e].g;
+                totals.b += centers[i].assignedClrs[e].b;
+            }
+            if(i == 0){
+                console.log(totals);
+                console.log(centers[i]);}
+            centers[i].r = totals.r / centers[i].assignedClrs.length;
+            centers[i].g = totals.g / centers[i].assignedClrs.length;
+            centers[i].b = totals.b / centers[i].assignedClrs.length;
+        }
+    }
+    return centers;
+}
 
 //Color object
 function Clr (r, g, b) {
@@ -12,6 +64,7 @@ function Clr (r, g, b) {
     this.g = g;
     this.b = b;
     this.similar = 0;
+    this.assignedClrs = [];
 }
 
 //Get list of pixel colors in the image
@@ -87,7 +140,7 @@ function mostSimilar (color) {
 
 //Create canvas 1
 var canvas1 = document.getElementById("canvas1");
-var ctx1 = canvas1.getContext("2d");
+var ctx1 = canvas1.getContext("2d", {willReadFrequently: true});
 canvas1.width = 480;
 
 //Select image 1
@@ -116,53 +169,59 @@ function getPalette () {
         if (i % 25 == 0)
             image1list.push(image1list2[i]);
     }
-    //Loop to count similars and remove duplicates
-    for (var i = 0; i < image1list.length; i++) {
-        for (var e = 0; e < image1list.length; e++) {
-            //Don't count self
-            if (i == e)
-                continue;
-            var difference = {
-                r: 0,
-                g: 0,
-                b: 0
-            };
-            difference.r = image1list[i].r - image1list[e].r;
-            difference.g = image1list[i].g - image1list[e].g;
-            difference.b = image1list[i].b - image1list[e].b;
-            //Unsigned/absolute value
-            if (difference.r < 0)
-                difference.r *= -1;
-            if (difference.g < 0)
-                difference.g *= -1;
-            if (difference.b < 0)
-                difference.b *= -1;
-            //Remove duplicates, count similar
-            if (difference.r == 0 && difference.g == 0 && difference.b == 0) {
-                image1list.splice(e, 1);
-                e--;
-            } else if (difference.r < 25 && difference.g < 25 && difference.b < 25) {
-                image1list[i].similar++;
+    if (engine == 0) {
+        //Loop to count similars and remove duplicates
+        for (var i = 0; i < image1list.length; i++) {
+            for (var e = 0; e < image1list.length; e++) {
+                //Don't count self
+                if (i == e)
+                    continue;
+                var difference = {
+                    r: 0,
+                    g: 0,
+                    b: 0
+                };
+                difference.r = image1list[i].r - image1list[e].r;
+                difference.g = image1list[i].g - image1list[e].g;
+                difference.b = image1list[i].b - image1list[e].b;
+                //Unsigned/absolute value
+                if (difference.r < 0)
+                    difference.r *= -1;
+                if (difference.g < 0)
+                    difference.g *= -1;
+                if (difference.b < 0)
+                    difference.b *= -1;
+                //Remove duplicates, count similar
+                if (difference.r == 0 && difference.g == 0 && difference.b == 0) {
+                    image1list.splice(e, 1);
+                    e--;
+                } else if (difference.r < 25 && difference.g < 25 && difference.b < 25) {
+                    image1list[i].similar++;
+                }
             }
         }
+    } else {
+        image1list = getColors(image1list, number, ctx1);
     }
     //Cut down to X colors
     var finals = [];
     for (var i = 0; i < image1list.length; i++) {
         finals.push(image1list[i]);
     }
-    finals.sort((a, b) => b.similar - a.similar);
-    for (var i = 0; i < finals.length; i++) {
-        for (var e = 0; e < finals.length; e++) {
-            if (isSimilar(finals[i], finals[e])) {
-                finals.splice(e, 1);
-                e--;
+    if (engine == 0) {
+        finals.sort((a, b) => b.similar - a.similar);
+        for (var i = 0; i < finals.length; i++) {
+            for (var e = 0; e < finals.length; e++) {
+                if (isSimilar(finals[i], finals[e]) && finals.length > number) {
+                    finals.splice(e, 1);
+                    e--;
+                }
             }
         }
-    }
-    for (var i = number; i < finals.length; i++) {
-        finals.splice(i, 1);
-        i--;
+        for (var i = number; i < finals.length; i++) {
+            finals.splice(i, 1);
+            i--;
+        }
     }
     //Draw pallete
     var palette = document.getElementById("palette");
@@ -182,7 +241,7 @@ function getPalette () {
             pos.y += 32;
         }
     }
-    //document.getElementById("pdownload").href = canvas1.toDataURL();
+    document.getElementById("pdownload").href = palette.toDataURL();
     colorlist = finals;
 }
 

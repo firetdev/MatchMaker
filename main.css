@@ -8,6 +8,10 @@ body {
 canvas {
     outline: 5px solid white;
 }
+a {
+    text-decoration: none;
+    color: rgb(255, 255, 255);
+}
 .file {
     display: none;
 }
@@ -45,6 +49,9 @@ canvas {
 }
 #title {
     margin-top: 30px;
+}
+#palpart {
+    display: inline-block;
 }
 .button:hover {
     background-color: rgb(101, 218, 218);
