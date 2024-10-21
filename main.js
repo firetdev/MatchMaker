@@ -47,9 +47,6 @@ function getColors (clrs, num, con) {
                 totals.g += centers[i].assignedClrs[e].g;
                 totals.b += centers[i].assignedClrs[e].b;
             }
-            if(i == 0){
-                console.log(totals);
-                console.log(centers[i]);}
             centers[i].r = totals.r / centers[i].assignedClrs.length;
             centers[i].g = totals.g / centers[i].assignedClrs.length;
             centers[i].b = totals.b / centers[i].assignedClrs.length;
