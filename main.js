@@ -154,6 +154,8 @@ image1.addEventListener ("change", e => {
     };
     reader.readAsDataURL(file);
     document.getElementById("file1").textContent = e.target.files[0].name;
+    document.getElementById("loading").style.display = "block";
+    document.getElementById("beforeloading").style.display = "none";
     window.setTimeout("getPalette()", 10);
 });
 
@@ -243,6 +245,8 @@ function getPalette () {
     }
     document.getElementById("pdownload").href = palette.toDataURL();
     colorlist = finals;
+    document.getElementById("loading").style.display = "none";
+    document.getElementById("beforeloading").style.display = "block";
 }
 
 //
@@ -251,7 +255,7 @@ function getPalette () {
 
 //Create canvas 2
 var canvas2 = document.getElementById("canvas2");
-var ctx2 = canvas2.getContext("2d");
+var ctx2 = canvas2.getContext("2d", {willReadFrequently: true});
 var canvasDisplay = document.getElementById("canvasdata");
 canvas2.width = 480;
 

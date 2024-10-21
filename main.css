@@ -53,6 +53,9 @@ a {
 #palpart {
     display: inline-block;
 }
+#loading {
+    display: none;
+}
 .button:hover {
     background-color: rgb(101, 218, 218);
 }
