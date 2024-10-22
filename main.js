@@ -29,7 +29,10 @@ function getColors (clrs, num) {
         centers.push(newColor);
         groups.push([]);
     }
-    while (centers != oldCenters) {
+    var iterations = 0;
+    var maxIterations = 100;
+    while (iterations < maxIterations) {
+        iterations++;
         groups = centers.map(() => []);
         for (var u = 0; u < 3; u++) {
             for (var i = 0; i < clrs.length; i++) {
