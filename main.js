@@ -8,48 +8,77 @@ var engine = 0;  //System to use to get palette
 //
 
 //Alternate way to make palette (INCOMPLETE; DO NOT USE)
-function getColors (clrs, num, con) {
+function getColors (clrs, num) {
     var centers = [];
+    var oldCenters = [];
+    var groups = [];
     for (var i = 0; i < num; i++) {
-        var a = Math.floor(Math.random() * (canvas1.width + 1));
-        var b = Math.floor(Math.random() * (canvas1.height + 1));
-        var newColor = new Clr(con.getImageData(a, b, 1, 1).data[0], con.getImageData(a, b, 1, 1).data[1], con.getImageData(a, b, 1, 1).data[2]);
+        var a = Math.floor(Math.random() * clrs.length);
+        var newColor = clrs[a];
+        console.log(newColor.b + ":" + a);
         for (var e = 0; e < centers.length; e++) {
-            if (isSimilar(centers[e], newColor)) {
-                a = Math.floor(Math.random() * (canvas1.width + 1));
-                b = Math.floor(Math.random() * (canvas1.height + 1));
-                newColor = new Clr(con.getImageData(a, b, 1, 1).data[0], con.getImageData(a, b, 1, 1).data[1], con.getImageData(a, b, 1, 1).data[2]);
+            while (isNaN(newColor.r) || isNaN(newColor.g) || isNaN(newColor.b)) {
+                a = Math.floor(Math.random() * clrs.length);
+                newColor = clrs[a];
+            }
+            while (newColor.r == null || newColor.g == null || newColor.b == null) {
+                a = Math.floor(Math.random() * clrs.length);
+                newColor = clrs[a];
+            }
+            while (newColor.r == "null" || newColor.g == "null" || newColor.b == "null") {
+                a = Math.floor(Math.random() * clrs.length);
+                newColor = clrs[a];
+            }
+            while (isSimilar(centers[e], newColor)) {
+                a = Math.floor(Math.random() * clrs.length);
+                newColor = clrs[a];
             }
         }
         centers.push(newColor);
+        groups.push([]);
     }
-    for (var u = 0; u < 3; u++) {
-        for (var i = 0; i < clrs.length; i++) {
-            var prevDist = 10000000;
-            var point = 0;
-            for (var e = 0; e < centers.length; e++) {
-                var dist = Math.sqrt(((clrs[i].r - centers[e].r)^2) + ((clrs[i].g - centers[e].g)^2) + ((clrs[i].b - centers[e].b)^2));
-                if (dist < prevDist) {
-                    prevDist = dist;
-                    point = e;
+    while (centers != oldCenters) {
+        groups = centers.map(() => []);
+        for (var u = 0; u < 3; u++) {
+            for (var i = 0; i < clrs.length; i++) {
+                var prevDist = 10000000;
+                var point = 0;  //Index of center point which color is closest to
+                for (var e = 0; e < centers.length; e++) {
+                    var diff = {
+                        r: centers[e].r - clrs[i].r,
+                        g: centers[e].g - clrs[i].g,
+                        b: centers[e].b - clrs[i].b
+                    }
+                    var dist = Math.sqrt(diff.r * diff.r + diff.g * diff.g + diff.b * diff.b);
+                    if (dist < prevDist) {
+                        prevDist = dist;
+                        point = e;
+                    }
+                }
+                groups[point].push(clrs[i]);
+            }
+            for (var i = 0; i < centers.length; i++) {
+                var totals = {
+                    r: 0,
+                    g: 0,
+                    b: 0
+                }
+                for (var e = 0; e < groups[i].length; e++) {
+                    totals.r += groups[i][e].r;
+                    totals.g += groups[i][e].g;
+                    totals.b += groups[i][e].b;
+                }
+                oldCenters = centers;
+                if (groups[i].length > 0) {
+                    centers[i].r = totals.r / groups[i].length;
+                    centers[i].g = totals.g / groups[i].length;
+                    centers[i].b = totals.b / groups[i].length;
+                }
+                for (var e = 0; e < centers.length; e++) {
+                    if (Math.abs(centers[i].r - oldCenters[i].r) > 1 || Math.abs(centers[i].g - oldCenters[i].g) > 1 || Math.abs(centers[i].b - oldCenters[i].b) > 1)
+                        break;
                 }
             }
-            centers[point].assignedClrs.push(clrs[i]);
-        }
-        for (var i = 0; i < centers.length; i++) {
-            var totals = {
-                r: 0,
-                g: 0,
-                b: 0
-            }
-            for (var e = 0; e < centers[i].assignedClrs.length; e++) {
-                totals.r += centers[i].assignedClrs[e].r;
-                totals.g += centers[i].assignedClrs[e].g;
-                totals.b += centers[i].assignedClrs[e].b;
-            }
-            centers[i].r = totals.r / centers[i].assignedClrs.length;
-            centers[i].g = totals.g / centers[i].assignedClrs.length;
-            centers[i].b = totals.b / centers[i].assignedClrs.length;
         }
     }
     return centers;
@@ -61,7 +90,6 @@ function Clr (r, g, b) {
     this.g = g;
     this.b = b;
     this.similar = 0;
-    this.assignedClrs = [];
 }
 
 //Get list of pixel colors in the image
@@ -200,7 +228,7 @@ function getPalette () {
             }
         }
     } else {
-        image1list = getColors(image1list, number, ctx1);
+        image1list = getColors(image1list, number);
     }
     //Cut down to X colors
     var finals = [];
