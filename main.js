@@ -1,6 +1,6 @@
 //The script for MatchMaker, which creates palettes from images and recolors images to match palettes
 
-var colorlist = []  //Palette
+var colorlist = [];  //Palette
 var engine = 0;  //System to use to get palette
 var fileSelected = false;  //Check whether file to make palette from has been selected (used when changing engines)
 
@@ -50,7 +50,7 @@ function getColors (clrs, num) {
                         r: centers[e].r - clrs[i].r,
                         g: centers[e].g - clrs[i].g,
                         b: centers[e].b - clrs[i].b
-                    }
+                    };
                     var dist = Math.sqrt(diff.r * diff.r + diff.g * diff.g + diff.b * diff.b);
                     if (dist < prevDist) {
                         prevDist = dist;
@@ -64,7 +64,7 @@ function getColors (clrs, num) {
                     r: 0,
                     g: 0,
                     b: 0
-                }
+                };
                 for (var e = 0; e < groups[i].length; e++) {
                     totals.r += groups[i][e].r;
                     totals.g += groups[i][e].g;
