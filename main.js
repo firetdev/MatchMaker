@@ -17,8 +17,11 @@ var fileSelected = false;  //Check whether file to make palette from has been se
 function swapEngine () {
     engine == 0 ? engine = 1 : engine = 0;
     document.getElementById("engine").textContent = `Engine ${engine}`;
-    if (fileSelected)
-        getPalette();
+    if (fileSelected) {
+        document.getElementById("loading").style.display = "block";
+        document.getElementById("beforeloading").style.display = "none";
+        window.setTimeout("getPalette()", 1000);
+    }
 }
 
 //Alternate way to make palette
