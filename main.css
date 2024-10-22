@@ -25,6 +25,7 @@ a {
     display: inline-block;
     border-radius: 10%;
     transition: background-color 0.5s;
+    cursor: pointer;
 }
 .imagedisplay {
     display: none;

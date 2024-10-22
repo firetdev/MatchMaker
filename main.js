@@ -1,7 +1,7 @@
 //The script for MatchMaker, which creates palettes from images and recolors images to match palettes
 
 var colorlist = []  //Palette
-var engine = 0;  //System to use to get palette
+var engine = 1;  //System to use to get palette
 
 //
 //FUNCTIONS
@@ -16,18 +16,6 @@ function getColors (clrs, num) {
         var a = Math.floor(Math.random() * clrs.length);
         var newColor = clrs[a];
         for (var e = 0; e < centers.length; e++) {
-            while (isNaN(newColor.r) || isNaN(newColor.g) || isNaN(newColor.b)) {
-                a = Math.floor(Math.random() * clrs.length);
-                newColor = clrs[a];
-            }
-            while (newColor.r == null || newColor.g == null || newColor.b == null) {
-                a = Math.floor(Math.random() * clrs.length);
-                newColor = clrs[a];
-            }
-            while (newColor.r == "null" || newColor.g == "null" || newColor.b == "null") {
-                a = Math.floor(Math.random() * clrs.length);
-                newColor = clrs[a];
-            }
             while (isSimilar(centers[e], newColor)) {
                 a = Math.floor(Math.random() * clrs.length);
                 newColor = clrs[a];
