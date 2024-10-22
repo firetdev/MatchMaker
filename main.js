@@ -15,7 +15,6 @@ function getColors (clrs, num) {
     for (var i = 0; i < num; i++) {
         var a = Math.floor(Math.random() * clrs.length);
         var newColor = clrs[a];
-        console.log(newColor.b + ":" + a);
         for (var e = 0; e < centers.length; e++) {
             while (isNaN(newColor.r) || isNaN(newColor.g) || isNaN(newColor.b)) {
                 a = Math.floor(Math.random() * clrs.length);
