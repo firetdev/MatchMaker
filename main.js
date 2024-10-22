@@ -1,10 +1,5 @@
 //The script for MatchMaker, which creates palettes from images and recolors images to match palettes
 
-/*
-ISSUES:
--Engine 1 gives lots of black and blue
-*/
-
 var colorlist = []  //Palette
 var engine = 0;  //System to use to get palette
 var fileSelected = false;  //Check whether file to make palette from has been selected (used when changing engines)
