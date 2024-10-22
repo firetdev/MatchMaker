@@ -33,6 +33,12 @@ a {
 .filename {
     margin-top: 10px;
 }
+#engine {
+    display: inline-block;
+    position: absolute;
+    top: 7%;
+    right: 15%;
+}
 #part1 {
     float: left;
     padding-left: 10%;

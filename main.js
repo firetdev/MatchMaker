@@ -7,10 +7,19 @@ ISSUES:
 
 var colorlist = []  //Palette
 var engine = 0;  //System to use to get palette
+var fileSelected = false;  //Check whether file to make palette from has been selected (used when changing engines)
 
 //
 //FUNCTIONS
 //
+
+//Change engines
+function swapEngine () {
+    engine == 0 ? engine = 1 : engine = 0;
+    document.getElementById("engine").textContent = `Engine ${engine}`;
+    if (fileSelected)
+        getPalette();
+}
 
 //Alternate way to make palette
 function getColors (clrs, num) {
@@ -180,6 +189,7 @@ image1.addEventListener ("change", e => {
     document.getElementById("file1").textContent = e.target.files[0].name;
     document.getElementById("loading").style.display = "block";
     document.getElementById("beforeloading").style.display = "none";
+    fileSelected = true;
     window.setTimeout("getPalette()", 10);
 });
 
