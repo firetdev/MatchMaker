@@ -1,7 +1,7 @@
 //The script for MatchMaker, which creates palettes from images and recolors images to match palettes
 
 var colorlist = []  //Palette
-var engine = 1;  //System to use to get palette
+var engine = 0;  //System to use to get palette
 
 //
 //FUNCTIONS
@@ -107,10 +107,14 @@ function isSimilar (c1, c2) {
     if (difference.b < 0)
         difference.b *= -1;
     var total = difference.r + difference.g + difference.b;
-    if (total == 0)
-        return false;
     if (difference.r >= 45 || difference.g >= 45 || difference.b >= 45) 
         return false;
+    if (total == 0) {
+        if (engine == 1)
+            return true;  //Engine 1 will not cut out identical colors later
+        if (engine == 0)
+            return false;  //Engine 0 will, and needs them to not be included in the similar count
+    }
     if (total <= 100) {
         return true;
     }
