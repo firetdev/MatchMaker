@@ -188,7 +188,7 @@ image1.addEventListener ("change", e => {
     document.getElementById("loading").style.display = "block";
     document.getElementById("beforeloading").style.display = "none";
     fileSelected = true;
-    window.setTimeout("getPalette()", 10);
+    setTimeout("getPalette()", 10);
 });
 
 //Activates when image is selected
@@ -276,6 +276,11 @@ function getPalette () {
         }
     }
     document.getElementById("pdownload").href = palette.toDataURL();
+    for (var i = 0; i < finals.length; i++) {
+        document.getElementById("txtcontent").textContent += `rgb(${finals[i].r},${finals[i].g},${finals[i].b})\n`;
+    }
+    var contentBlob = new Blob([document.getElementById("txtcontent").textContent], {type: "text/plain"});
+    document.getElementById("pdownload2").href = URL.createObjectURL(contentBlob);
     colorlist = finals;
     document.getElementById("loading").style.display = "none";
     document.getElementById("beforeloading").style.display = "block";
@@ -302,7 +307,7 @@ image2.addEventListener("change", (e) => {
     };
     reader.readAsDataURL(file);
     document.getElementById("file2").textContent = e.target.files[0].name;
-    window.setTimeout("initRender()", 10);
+    setTimeout("initRender()", 10);
 });
 
 //Initial render
