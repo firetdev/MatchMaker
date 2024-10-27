@@ -130,9 +130,8 @@ function isSimilar(c1, c2) {
         if (engine == 0)
             return false;  // Engine 0 will, and needs them to not be included in the similar count
     }
-    if (total <= 100) {
+    if (total <= 100)
         return true;
-    }
 }
 
 // Which color is most similar?
