@@ -1,8 +1,8 @@
 // The script for MatchMaker, which creates palettes from images and recolors images to match palettes
 
-var colorlist = [];  // Palette
-var engine = 0;  // System to use to get palette
-var fileSelected = false;  // Check whether file to make palette from has been selected (used when changing engines)
+const colorlist = [];  // Palette
+let engine = 0;  // System to use to get palette
+let fileSelected = false;  // Check whether file to make palette from has been selected (used when changing engines)
 
 //
 // FUNCTIONS
@@ -21,13 +21,13 @@ function swapEngine() {
 
 // Alternate way to make palette
 function getColors(clrs, num) {
-    var centers = [];
-    var oldCenters = [];
-    var groups = [];
-    for (var i = 0; i < num; i++) {
-        var a = Math.floor(Math.random() * clrs.length);
-        var newColor = clrs[a];
-        for (var e = 0; e < centers.length; e++) {
+    const centers = [];
+    const oldCenters = [];
+    const groups = [];
+    for (let i = 0; i < num; i += 1) {
+        let a = Math.floor(Math.random() * clrs.length);
+        let newColor = clrs[a];
+        for (let e = 0; e < centers.length; e += 1) {
             while (isSimilar(centers[e], newColor)) {
                 a = Math.floor(Math.random() * clrs.length);
                 newColor = clrs[a];
@@ -36,22 +36,22 @@ function getColors(clrs, num) {
         centers.push(newColor);
         groups.push([]);
     }
-    var iterations = 0;
-    var maxIterations = 100;
+    let iterations = 0;
+    const maxIterations = 100;
     while (iterations < maxIterations) {
-        iterations++;
+        iterations += 1;
         groups = centers.map(() => []);
-        for (var u = 0; u < 3; u++) {
-            for (var i = 0; i < clrs.length; i++) {
-                var prevDist = 10000000;
-                var point = 0;  // Index of center point which color is closest to
-                for (var e = 0; e < centers.length; e++) {
-                    var diff = {
+        for (let u = 0; u < 3; u += 1) {
+            for (let i = 0; i < clrs.length; i += 1) {
+                let prevDist = 10000000;
+                let point = 0;  // Index of center point which color is closest to
+                for (let e = 0; e < centers.length; e += 1) {
+                    const diff = {
                         r: centers[e].r - clrs[i].r,
                         g: centers[e].g - clrs[i].g,
                         b: centers[e].b - clrs[i].b
                     };
-                    var dist = Math.sqrt(diff.r * diff.r + diff.g * diff.g + diff.b * diff.b);
+                    const dist = Math.sqrt(diff.r * diff.r + diff.g * diff.g + diff.b * diff.b);
                     if (dist < prevDist) {
                         prevDist = dist;
                         point = e;
@@ -59,13 +59,13 @@ function getColors(clrs, num) {
                 }
                 groups[point].push(clrs[i]);
             }
-            for (var i = 0; i < centers.length; i++) {
-                var totals = {
+            for (let i = 0; i < centers.length; i += 1) {
+                const totals = {
                     r: 0,
                     g: 0,
                     b: 0
                 };
-                for (var e = 0; e < groups[i].length; e++) {
+                for (let e = 0; e < groups[i].length; e += 1) {
                     totals.r += groups[i][e].r;
                     totals.g += groups[i][e].g;
                     totals.b += groups[i][e].b;
@@ -76,7 +76,7 @@ function getColors(clrs, num) {
                     centers[i].g = totals.g / groups[i].length;
                     centers[i].b = totals.b / groups[i].length;
                 }
-                for (var e = 0; e < centers.length; e++) {
+                for (let e = 0; e < centers.length; e += 1) {
                     if (Math.abs(centers[i].r - oldCenters[i].r) > 1 || Math.abs(centers[i].g - oldCenters[i].g) > 1 || Math.abs(centers[i].b - oldCenters[i].b) > 1)
                         break;
                 }
@@ -96,9 +96,9 @@ function Clr(r, g, b) {
 
 // Get list of pixel colors in the image
 function listOfColors(img, con) {
-    var list = [];
-    for (var i = 0; i < img.height; i++) {
-        for (var e = 0; e < img.width; e++) {
+    const list = [];
+    for (let i = 0; i < img.height; i += 1) {
+        for (let e = 0; e < img.width; e += 1) {
             list.push(new Clr(con.getImageData(e, i, 1, 1).data[0], con.getImageData(e, i, 1, 1).data[1], con.getImageData(e, i, 1, 1).data[2]));
         }
     }
@@ -107,7 +107,7 @@ function listOfColors(img, con) {
 
 // Are two colors similar?
 function isSimilar(c1, c2) {
-    var difference = {
+    const difference = {
         r: 0,
         g: 0,
         b: 0
@@ -121,7 +121,7 @@ function isSimilar(c1, c2) {
         difference.g *= -1;
     if (difference.b < 0)
         difference.b *= -1;
-    var total = difference.r + difference.g + difference.b;
+    const total = difference.r + difference.g + difference.b;
     if (difference.r >= 45 || difference.g >= 45 || difference.b >= 45) 
         return false;
     if (total == 0) {
@@ -137,10 +137,10 @@ function isSimilar(c1, c2) {
 
 // Which color is most similar?
 function mostSimilar(color) {
-    var prevDifference = 10000000;
-    var prev;
-    for (var i = 0; i < colorlist.length; i++) {
-        var difference = {
+    let prevDifference = 10000000;
+    let prev;
+    for (let i = 0; i < colorlist.length; i += 1) {
+        const difference = {
             r: 0,
             g: 0,
             b: 0
@@ -156,7 +156,7 @@ function mostSimilar(color) {
             difference.b *= -1;
         if (difference.r >= 45 || difference.g >= 45 || difference.b >= 45) 
             total += 50;
-        var total = difference.r + difference.g + difference.b;
+        const total = difference.r + difference.g + difference.b;
         if (total < prevDifference) {
             prevDifference = total;
             prev = colorlist[i];
@@ -170,16 +170,16 @@ function mostSimilar(color) {
 //
 
 // Create canvas 1
-var canvas1 = document.getElementById('canvas1');
-var ctx1 = canvas1.getContext('2d', {willReadFrequently: true});
+const canvas1 = document.getElementById('canvas1');
+const ctx1 = canvas1.getContext('2d', {willReadFrequently: true});
 canvas1.width = 480;
 
 // Select image 1
-var image1 = document.getElementById('image1');
-var image1display = document.getElementById('image1display');
+const image1 = document.getElementById('image1');
+const image1display = document.getElementById('image1display');
 image1.addEventListener('change', e => {
-    var file = e.target.files[0];
-    var reader = new FileReader();
+    const file = e.target.files[0];
+    const reader = new FileReader();
     reader.onload = (event) => {
         image1display.src = event.target.result;
     };
@@ -193,24 +193,24 @@ image1.addEventListener('change', e => {
 
 // Activates when image is selected
 function getPalette() {
-    var number = document.getElementById('number').value;
+    const number = document.getElementById('number').value;
     canvas1.height = (image1display.height / image1display.width) * canvas1.width;
     ctx1.drawImage(image1display, 0, 0, canvas1.width, canvas1.height);
-    var image1list2 = listOfColors(image1display, ctx1);
-    var image1list = [];
+    const image1list2 = listOfColors(image1display, ctx1);
+    const image1list = [];
     // Speed up processing by only including 1 in 25 pixels
-    for (var i = 0; i < image1list2.length; i++) {
+    for (let i = 0; i < image1list2.length; i += 1) {
         if (i % 25 == 0)
             image1list.push(image1list2[i]);
     }
     if (engine == 0) {
         // Loop to count similars and remove duplicates
-        for (var i = 0; i < image1list.length; i++) {
-            for (var e = 0; e < image1list.length; e++) {
+        for (let i = 0; i < image1list.length; i += 1) {
+            for (let e = 0; e < image1list.length; e += 1) {
                 // Don't count self
                 if (i == e)
                     continue;
-                var difference = {
+                const difference = {
                     r: 0,
                     g: 0,
                     b: 0
@@ -228,9 +228,9 @@ function getPalette() {
                 // Remove duplicates, count similar
                 if (difference.r == 0 && difference.g == 0 && difference.b == 0) {
                     image1list.splice(e, 1);
-                    e--;
+                    e -= 1;
                 } else if (difference.r < 25 && difference.g < 25 && difference.b < 25) {
-                    image1list[i].similar++;
+                    image1list[i].similar += 1;
                 }
             }
         }
@@ -238,35 +238,35 @@ function getPalette() {
         image1list = getColors(image1list, number);
     }
     // Cut down to X colors
-    var finals = [];
-    for (var i = 0; i < image1list.length; i++) {
+    const finals = [];
+    for (let i = 0; i < image1list.length; i += 1) {
         finals.push(image1list[i]);
     }
     if (engine == 0) {
         finals.sort((a, b) => b.similar - a.similar);
-        for (var i = 0; i < finals.length; i++) {
-            for (var e = 0; e < finals.length; e++) {
+        for (let i = 0; i < finals.length; i += 1) {
+            for (let e = 0; e < finals.length; e += 1) {
                 if (isSimilar(finals[i], finals[e]) && finals.length > number) {
                     finals.splice(e, 1);
-                    e--;
+                    e -= 1;
                 }
             }
         }
-        for (var i = number; i < finals.length; i++) {
+        for (let i = number; i < finals.length; i += 1) {
             finals.splice(i, 1);
-            i--;
+            i -= 1;
         }
     }
     // Draw pallete
-    var palette = document.getElementById('palette');
-    var paletteCtx = palette.getContext('2d');
+    const palette = document.getElementById('palette');
+    const paletteCtx = palette.getContext('2d');
     palette.height = (finals.length * 32) / 4;
     palette.width = 128;
-    var pos = {
+    const pos = {
         x: 1,
         y: 1
     };
-    for (var i = 0; i < finals.length; i++) {
+    for (let i = 0; i < finals.length; i += 1) {
         paletteCtx.fillStyle = `rgb(${finals[i].r}, ${finals[i].g}, ${finals[i].b})`;
         paletteCtx.fillRect(pos.x, pos.y, 32, 32);
         pos.x += 32;
@@ -276,10 +276,10 @@ function getPalette() {
         }
     }
     document.getElementById('pdownload').href = palette.toDataURL();
-    for (var i = 0; i < finals.length; i++) {
+    for (let i = 0; i < finals.length; i += 1) {
         document.getElementById('txtcontent').textContent += `rgb(${finals[i].r},${finals[i].g},${finals[i].b})\n`;
     }
-    var contentBlob = new Blob([document.getElementById('txtcontent').textContent], {type: 'text/plain'});
+    const contentBlob = new Blob([document.getElementById('txtcontent').textContent], {type: 'text/plain'});
     document.getElementById('pdownload2').href = URL.createObjectURL(contentBlob);
     colorlist = finals;
     document.getElementById('loading').style.display = 'none';
@@ -291,17 +291,17 @@ function getPalette() {
 //
 
 // Create canvas 2
-var canvas2 = document.getElementById('canvas2');
-var ctx2 = canvas2.getContext('2d', {willReadFrequently: true});
-var canvasDisplay = document.getElementById('canvasdata');
+const canvas2 = document.getElementById('canvas2');
+const ctx2 = canvas2.getContext('2d', {willReadFrequently: true});
+const canvasDisplay = document.getElementById('canvasdata');
 canvas2.width = 480;
 
 // Select image2
-var image2 = document.getElementById('image2');
-var image2display = document.getElementById('image2display');
+const image2 = document.getElementById('image2');
+const image2display = document.getElementById('image2display');
 image2.addEventListener('change', (e) => {
-    var file = e.target.files[0];
-    var reader = new FileReader();
+    const file = e.target.files[0];
+    const reader = new FileReader();
     reader.onload = (event) => {
         image2display.src = event.target.result;
     };
@@ -320,16 +320,16 @@ function initRender() {
 
 // Recolor image
 function recolor() {
-    var list = listOfColors(canvasDisplay, ctx2);
-    var position = {
+    const list = listOfColors(canvasDisplay, ctx2);
+    const position = {
         x: 0,
         y: 1
     };
-    for (var i = 0; i < list.length; i++) {
-        position.x++;
+    for (let i = 0; i < list.length; i += 1) {
+        position.x += 1;
         if (position.x > 480) {
             position.x = 1;
-            position.y++;
+            position.y += 1;
         }
         list[i].r = mostSimilar(list[i]).r;
         list[i].g = mostSimilar(list[i]).g;
