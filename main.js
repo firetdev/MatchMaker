@@ -1,6 +1,6 @@
 // The script for MatchMaker, which creates palettes from images and recolors images to match palettes
 
-const colorlist = [];  // Palette
+let colorlist = [];  // Palette
 let engine = 0;  // System to use to get palette
 let fileSelected = false;  // Check whether file to make palette from has been selected (used when changing engines)
 
@@ -21,9 +21,9 @@ function swapEngine() {
 
 // Alternate way to make palette
 function getColors(clrs, num) {
-    const centers = [];
-    const oldCenters = [];
-    const groups = [];
+    let centers = [];
+    let oldCenters = [];
+    let groups = [];
     for (let i = 0; i < num; i += 1) {
         let a = Math.floor(Math.random() * clrs.length);
         let newColor = clrs[a];
@@ -196,7 +196,7 @@ function getPalette() {
     canvas1.height = (image1display.height / image1display.width) * canvas1.width;
     ctx1.drawImage(image1display, 0, 0, canvas1.width, canvas1.height);
     const image1list2 = listOfColors(image1display, ctx1);
-    const image1list = [];
+    let image1list = [];
     // Speed up processing by only including 1 in 25 pixels
     for (let i = 0; i < image1list2.length; i += 1) {
         if (i % 25 == 0)
