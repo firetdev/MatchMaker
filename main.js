@@ -153,9 +153,9 @@ function mostSimilar(color) {
             difference.g *= -1;
         if (difference.b < 0)
             difference.b *= -1;
+        let total = difference.r + difference.g + difference.b;
         if (difference.r >= 45 || difference.g >= 45 || difference.b >= 45) 
             total += 50;
-        const total = difference.r + difference.g + difference.b;
         if (total < prevDifference) {
             prevDifference = total;
             prev = colorlist[i];
